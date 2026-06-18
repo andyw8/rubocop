@@ -190,6 +190,10 @@ RSpec.describe RuboCop::Options, :isolated_environment do
                   --regenerate-todo            Regenerate the TODO configuration file using
                                                the last configuration. If there is no existing
                                                TODO file, acts like --auto-gen-config.
+                  --check-todo                 Check whether the TODO configuration file
+                                               contains redundant entries, using the last
+                                               configuration. Exits with an error if so,
+                                               without modifying the TODO file.
                   --exclude-limit COUNT        Set the limit for how many files to explicitly exclude.
                                                If there are more files than the limit, the cop will
                                                be disabled instead. Default is 15.
@@ -635,6 +639,49 @@ RSpec.describe RuboCop::Options, :isolated_environment do
             exclude_limit: '100',
             offense_counts: true,
             regenerate_todo: true
+          }
+        end
+
+        it { is_expected.to eq(expected_options) }
+      end
+    end
+
+    describe '--check-todo' do
+      subject(:parsed_options) { options.parse(command_line_options).first }
+
+      let(:config_regeneration) do
+        instance_double(RuboCop::ConfigRegeneration, options: todo_options)
+      end
+      let(:todo_options) do
+        { auto_gen_config: true, exclude_limit: '100', offense_counts: false }
+      end
+
+      before do
+        allow(RuboCop::ConfigRegeneration).to receive(:new).and_return(config_regeneration)
+      end
+
+      context 'when no other options are given' do
+        let(:command_line_options) { %w[--check-todo] }
+        let(:expected_options) do
+          {
+            auto_gen_config: true,
+            exclude_limit: '100',
+            offense_counts: false,
+            check_todo: true
+          }
+        end
+
+        it { is_expected.to eq(expected_options) }
+      end
+
+      context 'when todo options are overridden before --check-todo' do
+        let(:command_line_options) { %w[--exclude-limit 50 --check-todo] }
+        let(:expected_options) do
+          {
+            auto_gen_config: true,
+            exclude_limit: '50',
+            offense_counts: false,
+            check_todo: true
           }
         end
 

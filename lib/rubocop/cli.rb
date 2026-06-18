@@ -131,7 +131,9 @@ module RuboCop
     end
 
     def execute_runners
-      if @options[:auto_gen_config]
+      if @options[:check_todo]
+        run_command(:check_todo)
+      elsif @options[:auto_gen_config]
         run_command(:auto_gen_config)
       else
         run_command(:execute_runner).tap { suggest_extensions }

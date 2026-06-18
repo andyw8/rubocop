@@ -31,6 +31,12 @@ Then you can start removing the entries in the generated
 in the code. You can also regenerate your `.rubocop_todo.yml` using
 the same options by running `rubocop --regenerate-todo`.
 
+Over time, entries in `.rubocop_todo.yml` can become redundant, e.g. when an
+offense is fixed but its `Exclude` entry is left behind. Run `rubocop
+--check-todo` to detect this without modifying the file; it exits with an
+error and lists the cops with redundant entries, which is useful as a CI
+check.
+
 Another way of silencing offense reports, aside from configuration, is
 through xref:usage/source_code_directives.adoc[source code directives]. These can be added manually or
 automatically.

@@ -36,6 +36,9 @@ $ rubocop --only Rails/Blank,Layout/HeredocIndentation,Naming/FileName
 | `--auto-gen-config`
 | Generate a configuration file acting as a TODO list.
 
+| `--check-todo`
+| Check whether the TODO list contains redundant entries, using the same options as the last time it was generated with `--auto-gen-config`. Exits with an error if so, without modifying the TODO file.
+
 | `--[no-]color`
 | Force color output on or off.
 
